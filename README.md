@@ -16,3 +16,27 @@ This dataset presents the daily OHLCV + Additional Metrics data for the SPY ETF,
 
 ***Our Approach***
 Given the OHLCV of a stock we plan to predict the Closing price for the next day. This script can then be used to predict the next 'n' days. 
+
+We began using linear regression but after seeing the state of our data we found that we would either have to do extensive data cleaning.
+
+We then attemped gradient boosting regressor 
+Gradient boosting regressor
+
+
+
+Notes from Piplai:
+Try:
+Random forest regressor OR Time series model
+Attempt one neural network- can be from online,, For this the data must be 
+
+
+DO:
+Use TWO datasets for the training and try the feature important scored to see what shows up and if it is consisten
+
+Normalization strategies for ALL our data before and then re-normalize the data
+-Min max scaler
+-mean scaler
+
+feature important scored- tells you if the features that you added are better than the raw data
+
+***Plotting the data with the actual predicions, then compare to the true Y***
