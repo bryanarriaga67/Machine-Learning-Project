@@ -3,7 +3,7 @@
 
 # Imports
 
-# In[2]:
+# In[48]:
 
 
 import pandas as pd
@@ -14,11 +14,14 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
+import matplotlib as plt
+from sklearn.metrics import mean_absolute_error
+
 
 
 # Modify CSV for more features
 
-# In[3]:
+# In[41]:
 
 
 df = pd.read_csv('datasets/SP500.csv')
@@ -62,7 +65,7 @@ df.to_csv('modified_file.csv', index=False)
 
 # Read modified file
 
-# In[4]:
+# In[42]:
 
 
 # Read data
@@ -80,7 +83,7 @@ X_scaled = scaler.fit_transform(X)
 
 # Predicting next day with HistGradientBoostingRegressor
 
-# In[5]:
+# In[43]:
 
 
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
@@ -94,43 +97,45 @@ mse_gradient_reg = mean_squared_error(y_test, y_pred)
 r2_gradient_reg = r2_score(y_test, y_pred)
 print("Mean Squared Error:", mse_gradient_reg)
 print("R-squared:", r2_gradient_reg)
+mae_gradient_reg = mean_absolute_error(y_test, y_pred)
+print("Mean Absolute Error:", mae_gradient_reg)
 
 future_data = pd.DataFrame({
-    'open': [400.0],
-    'high': [410.0],
-    'low': [395.0],
-    'close': [408.0],
-    'volume': [100],
-    'change_percent': [0.5],
-    'prev_day_open': [399.0],
-    'prev_day_high': [401.0],
-    'prev_day_low': [397.0], 
-    'prev_day_close': [400.0],
-    'prev_day_volume': [950000],
-    'prev_day_change_percent': [0.3],
-    'prev_week_open': [395.0],
-    'prev_week_high': [402.0],
-    'prev_week_low': [393.0],
-    'prev_week_close': [398.0],
-    'prev_week_volume': [900000],
-    'prev_week_change_percent': [0.2],
-    'prev_month_open': [380.0],
-    'prev_month_high': [415.0],
-    'prev_month_low': [375.0],
-    'prev_month_close': [390.0],
-    'prev_month_volume': [800000],
-    'prev_month_change_percent': [1.0],
-    'prev_week_trend_percentage': [2.5],
-    'prev_month_trend_percentage': [4.6],
-    'prev_week_volatility': [0.02],
-    'prev_month_volatility': [0.03]
+    'open': [4150.00],
+    'high': [4180.00],
+    'low': [4140.00],
+    'close': [4175.00],
+    'volume': [3500000],
+    'change_percent': [0.6],
+    'prev_day_open': [4140.00],
+    'prev_day_high': [4160.00],
+    'prev_day_low': [4135.00],
+    'prev_day_close': [4150.00],
+    'prev_day_volume': [3450000],
+    'prev_day_change_percent': [0.2],
+    'prev_week_open': [4100.00],
+    'prev_week_high': [4200.00],
+    'prev_week_low': [4080.00],
+    'prev_week_close': [4130.00],
+    'prev_week_volume': [3300000],
+    'prev_week_change_percent': [0.7],
+    'prev_month_open': [4000.00],
+    'prev_month_high': [4250.00],
+    'prev_month_low': [3950.00],
+    'prev_month_close': [4050.00],
+    'prev_month_volume': [3200000],
+    'prev_month_change_percent': [1.2],
+    'prev_week_trend_percentage': [1.09],  # Calculated: (4175.00 - 4130.00) / 4130.00 * 100
+    'prev_month_trend_percentage': [3.09],  # Calculated: (4175.00 - 4050.00) / 4050.00 * 100
+    'prev_week_volatility': [0.015],  # Placeholder value, replace with actual volatility if available
+    'prev_month_volatility': [0.025]  # Placeholder value, replace with actual volatility if available
 })
 
 future_pred = hgb_regressor.predict(future_data)
 print("Predicted next day stock price:", future_pred)
 
 
-# In[6]:
+# In[44]:
 
 
 # Load the modified dataset
@@ -150,38 +155,40 @@ mse_linear_reg = mean_squared_error(y_test, y_pred)
 r2_linear_reg = r2_score(y_test, y_pred)
 print("Linear Regression - Mean Squared Error:", mse_linear_reg)
 print("Linear Regression - R-squared:", r2_linear_reg)
-
+mae_linear_reg = mean_absolute_error(y_test, y_pred)
+print("Linear Regression - Mean Absolute Error:", mae_linear_reg)
 # Preparing future data for prediction
 future_data = pd.DataFrame({
-    'open': [400.0],
-    'high': [410.0],
-    'low': [395.0],
-    'close': [408.0],
-    'volume': [1000000],
-    'change_percent': [0.5],
-    'prev_day_open': [399.0],
-    'prev_day_high': [401.0],
-    'prev_day_low': [397.0],
-    'prev_day_close': [400.0],
-    'prev_day_volume': [950000],
-    'prev_day_change_percent': [0.3],
-    'prev_week_open': [395.0],
-    'prev_week_high': [402.0],
-    'prev_week_low': [393.0],
-    'prev_week_close': [398.0],
-    'prev_week_volume': [900000],
-    'prev_week_change_percent': [0.2],
-    'prev_month_open': [380.0],
-    'prev_month_high': [415.0],
-    'prev_month_low': [375.0],
-    'prev_month_close': [390.0],
-    'prev_month_volume': [800000],
-    'prev_month_change_percent': [1.0],
-    'prev_week_trend_percentage': [2.5],
-    'prev_month_trend_percentage': [4.6],
-    'prev_week_volatility': [0.02],
-    'prev_month_volatility': [0.03]
+    'open': [4150.00],
+    'high': [4180.00],
+    'low': [4140.00],
+    'close': [4175.00],
+    'volume': [3500000],
+    'change_percent': [0.6],
+    'prev_day_open': [4140.00],
+    'prev_day_high': [4160.00],
+    'prev_day_low': [4135.00],
+    'prev_day_close': [4150.00],
+    'prev_day_volume': [3450000],
+    'prev_day_change_percent': [0.2],
+    'prev_week_open': [4100.00],
+    'prev_week_high': [4200.00],
+    'prev_week_low': [4080.00],
+    'prev_week_close': [4130.00],
+    'prev_week_volume': [3300000],
+    'prev_week_change_percent': [0.7],
+    'prev_month_open': [4000.00],
+    'prev_month_high': [4250.00],
+    'prev_month_low': [3950.00],
+    'prev_month_close': [4050.00],
+    'prev_month_volume': [3200000],
+    'prev_month_change_percent': [1.2],
+    'prev_week_trend_percentage': [1.09],  # Calculated: (4175.00 - 4130.00) / 4130.00 * 100
+    'prev_month_trend_percentage': [3.09],  # Calculated: (4175.00 - 4050.00) / 4050.00 * 100
+    'prev_week_volatility': [0.015],  # Placeholder value, replace with actual volatility if available
+    'prev_month_volatility': [0.025]  # Placeholder value, replace with actual volatility if available
 })
+
 
 # Making predictions on future data
 future_pred = linear_regressor.predict(future_data)
@@ -191,7 +198,7 @@ print("Linear Regression - Predicted next day stock price:", future_pred)
 
 # Random Forest Regressor
 
-# In[7]:
+# In[45]:
 
 
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
@@ -202,10 +209,14 @@ mse_random_forest = mean_squared_error(y_test, y_pred)
 r2_random_forest = r2_score(y_test, y_pred)
 print("Mean Squared Error:", mse_random_forest)
 print("R2 Score:", r2_random_forest )
+mae_random_forest = mean_absolute_error(y_test, y_pred)
+print("Mean Absolute Error:", mae_random_forest)
 
 
 # Chart Results
-import matplotlib.pyplot as plt
+
+# In[47]:
+
 
 # Names of models
 models = ['HistGradientBoosting', 'Linear Regression', 'Random Forest']
@@ -215,6 +226,8 @@ mse_values = [mse_gradient_reg, mse_linear_reg, mse_random_forest]
 
 # R-squared values
 r2_values = [r2_gradient_reg, r2_linear_reg, r2_random_forest]
+
+mae_values = [mae_gradient_reg, mae_linear_reg, mae_random_forest]
 
 # Plotting the Mean Squared Error
 plt.figure(figsize=(10, 6))
@@ -231,3 +244,28 @@ plt.xlabel('Models')
 plt.ylabel('R-squared')
 plt.title('R-squared of Different Models')
 plt.show()
+
+plt.figure(figsize=(10, 6))
+plt.bar(models, mae_values, color='orange')
+plt.xlabel('Models')
+plt.ylabel('Mean Absolute Error')
+plt.title('Mean Absolute Error of Different Models')
+plt.show()
+
+importances = rff_model.feature_importances_
+
+# Get the feature names
+feature_names = X.columns
+
+# Sort the feature importances in descending order
+indices = np.argsort(importances)[::-1]
+
+plt.figure(figsize=(10, 6))
+plt.title("Feature Importances")
+plt.bar(range(X.shape[1]), importances[indices])
+plt.xticks(range(X.shape[1]), feature_names[indices], rotation=90)
+plt.xlabel("Features")
+plt.ylabel("Importance")
+plt.tight_layout()
+plt.show()
+
